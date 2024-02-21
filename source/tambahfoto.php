@@ -1,7 +1,11 @@
 <?php
+// Memulai sesi
 session_start();
+// Mengimpor koneksi ke database
 include '../config/koneksi.php';
-if ($_SESSION['status'] !='login') {
+// Cek apakah pengguna sudah login
+if ($_SESSION['status'] != 'login') {
+    // Jika belum, redirect ke halaman login
     echo "<script>
     alert('Anda Belum Login!');
     location.href='../index.php';
@@ -13,12 +17,18 @@ if ($_SESSION['status'] !='login') {
 <html lang="en">
 
 <head>
+    <!-- Meta tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title -->
     <title>Gallery Foto</title>
+    <!-- Mengimpor file CSS Bootstrap -->
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <!-- Mengimpor ikon dari font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- CSS kustom -->
     <style>
+    /* Gaya CSS kustom */
     .navbar-nav .nav-link {
         font-size: 1.1rem;
     }
@@ -37,12 +47,12 @@ if ($_SESSION['status'] !='login') {
         bottom: 75px;
         right: 35px;
         z-index: 999;
-
     }
     </style>
 </head>
 
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand ms-5" href="#"></a>
@@ -66,6 +76,7 @@ if ($_SESSION['status'] !='login') {
                     </li>
                 </ul>
             </div>
+            <!-- Tombol logout -->
             <div class="navbar-nav ml-auto mr-3" action>
                 <a class="nav-link" href="../config/proseslogout.php">
                     <i class="fas fa-sign-out-alt fa-lg me-4"></i>
@@ -74,11 +85,7 @@ if ($_SESSION['status'] !='login') {
         </div>
     </nav>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    <!-- Form Tambah Foto -->
     <div class="container custom-container py-5">
         <div class="row justify-content-center">
             <div class="col-md-10">
@@ -91,27 +98,36 @@ if ($_SESSION['status'] !='login') {
                         <br>
                         <br>
                         <form action="../config/prosesfoto.php" method="POST" enctype="multipart/form-data">
+                            <!-- Input untuk judul foto -->
                             <label class="form-label">Judul Foto</label>
                             <input type="text" name="JudulFoto" class="form-control" required>
                             <br>
+                            <!-- Input untuk deskripsi foto -->
                             <label class="form-label">Description</label>
                             <textarea class="form-control" name="DeskripsiFoto" required></textarea>
                             <br>
+                            <!-- Input untuk lokasi file foto -->
                             <label class="form-label">Lokasi FIle</label>
                             <input type="file" class="form-control" name="LokasiFile" required>
                             <br>
+                            <!-- Pilihan album -->
                             <label class="form-label" aria-label="Default select example">Album</label>
                             <select class="form-select" name="AlbumID" required>
                                 <?php
+                                // Mendapatkan ID pengguna yang sedang login
                                 $userid = $_SESSION['UserID'];
+                                // Mengambil daftar album dari pengguna yang sedang login
                                 $sql_album = mysqli_query($koneksi, "SELECT * FROM album WHERE UserID='$userid'");
-                                while($data_album = mysqli_fetch_array($sql_album)) { ?>
+                                // Perulangan melalui hasil query untuk menampilkan daftar album
+                                while ($data_album = mysqli_fetch_array($sql_album)) {
+                                ?>
                                 <option value="<?php echo $data_album['AlbumID'] ?>">
                                     <?php echo $data_album['NamaAlbum'] ?></option>
                                 <?php } ?>
                             </select>
                             <br>
                             <div class="d-grid mt-2">
+                                <!-- Tombol untuk menambahkan foto -->
                                 <button type="submit" class="btn btn-dark mt-2" name="tambah">Tambah</button>
                             </div>
                             <br>
@@ -122,12 +138,15 @@ if ($_SESSION['status'] !='login') {
         </div>
     </div>
 
+    <!-- Tombol untuk mengarahkan ke halaman foto -->
     <a href="foto.php" class="btn btn-dark btn-corner">Data Table</a>
 
+    <!-- Footer -->
     <footer class="d-flex justify-content-center border-top mt-3 bg-light fixed-bottom">
         <p>&copy; UKK RPL 2024 | Zackri Kurnia Amri</p>
     </footer>
 
+    <!-- Mengimpor file JavaScript Bootstrap -->
     <script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
 </body>
 

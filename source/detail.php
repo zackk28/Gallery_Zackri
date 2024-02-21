@@ -1,15 +1,20 @@
 <?php
+// Memulai sesi PHP
 session_start();
+// Mengimpor file koneksi.php untuk terhubung ke database
 include '../config/koneksi.php';
 
+// Memeriksa apakah pengguna sudah login atau belum
 if (!isset($_SESSION['status']) || $_SESSION['status'] != 'login') {
+    // Jika belum login, tampilkan pesan peringatan dan arahkan kembali ke halaman login
     echo "<script>
     alert('Anda Belum Login!');
     location.href='../index.php';
     </script>";
-    exit();
+    exit(); // Hentikan eksekusi skrip
 }
 
+// Memeriksa apakah FotoID telah diset dan valid
 if(isset($_GET['FotoID'])) {
     $fotoID = $_GET['FotoID'];
     
@@ -22,14 +27,15 @@ if(isset($_GET['FotoID'])) {
         alert('Foto tidak ditemukan!');
         location.href='foto.php';
         </script>";
-        exit();
+        exit(); // Hentikan eksekusi skrip
     }
 } else {
+    // Jika FotoID tidak tersedia, tampilkan pesan peringatan dan arahkan kembali ke halaman foto
     echo "<script>
     alert('FotoID tidak tersedia!');
     location.href='foto.php';
     </script>";
-    exit();
+    exit(); // Hentikan eksekusi skrip
 }
 ?>
 
@@ -39,9 +45,12 @@ if(isset($_GET['FotoID'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Foto</title>
+    <title>Gallery Foto</title>
+    <!-- Mengimpor stylesheet Bootstrap -->
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Mengimpor ikon dari Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Menambahkan gaya kustom -->
     <style>
     .navbar-nav .nav-link {
         font-size: 1.1rem;
@@ -58,6 +67,7 @@ if(isset($_GET['FotoID'])) {
 </head>
 
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand ms-5" href="#"></a>
@@ -65,6 +75,7 @@ if(isset($_GET['FotoID'])) {
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <!-- Navbar Links -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -81,6 +92,7 @@ if(isset($_GET['FotoID'])) {
                     </li>
                 </ul>
             </div>
+            <!-- Logout Link -->
             <div class="navbar-nav ml-auto mr-3" action>
                 <a class="nav-link" href="../config/proseslogout.php">
                     <i class="fas fa-sign-out-alt fa-lg me-4"></i>
@@ -89,7 +101,9 @@ if(isset($_GET['FotoID'])) {
         </div>
     </nav>
 
+    <!-- Konten Detail Foto -->
     <?php
+        // Mendapatkan detail album tempat foto berada
         $query = "SELECT * FROM foto INNER JOIN album ON foto.AlbumID = album.AlbumID WHERE foto.FotoID = '$fotoID'";
         $result = mysqli_query($koneksi, $query);
 
@@ -101,14 +115,17 @@ if(isset($_GET['FotoID'])) {
         }
     ?>
 
+    <!-- Tampilan Detail Foto -->
     <div class="m-5">
         <div class="row justify-content-start mt-5">
+            <!-- Kolom Foto -->
             <div class="col-md-3">
                 <h3 class="text-center"><?php echo $namaAlbum; ?></h3>
                 <br>
                 <img src="../assets/img/<?php echo $data['LokasiFile']; ?>" class="card-img-top" alt="Foto"
                     style="width: 100%; height: auto;">
             </div>
+            <!-- Kolom Informasi -->
             <br>
             <br>
             <div class="col-md-8">
@@ -122,14 +139,17 @@ if(isset($_GET['FotoID'])) {
         </div>
     </div>
 
+    <!-- Komentar -->
     <div class="m-5">
         <h5>Comment</h5>
         <div class="d-flex flex-column mb-3">
             <?php
+            // Mengambil komentar untuk foto ini dari database
             $userid = $_SESSION['UserID'];
             $sql = mysqli_query($koneksi, "SELECT komentarfoto.*, user.NamaLengkap FROM komentarfoto LEFT JOIN user ON komentarfoto.UserID = user.UserID WHERE komentarfoto.FotoID= '$fotoID'");
             while ($data = mysqli_fetch_array($sql)) {
             ?>
+            <!-- Menampilkan Komentar -->
             <div class="col-md-2 mb-3">
                 <div class="card">
                     <div class="card-body">
@@ -142,6 +162,7 @@ if(isset($_GET['FotoID'])) {
             <?php } ?>
         </div>
 
+        <!-- Form untuk menulis komentar -->
         <div class="mt-5">
             <div class="row">
                 <div class="col-md-2">
@@ -159,12 +180,15 @@ if(isset($_GET['FotoID'])) {
         </div>
     </div>
 
+    <!-- Tombol Kembali -->
     <a href="home.php" class="btn btn-dark btn-corner">Kembali</a>
 
+    <!-- Footer -->
     <footer class="d-flex justify-content-center border-top mt-3 bg-light">
         <p>&copy; UKK RPL 2024 | Zackri Kurnia Amri</p>
     </footer>
 
+    <!-- Script Bootstrap -->
     <script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
 </body>
 

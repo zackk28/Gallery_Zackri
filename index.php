@@ -5,10 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery Foto</title>
+    <!-- Mengimpor file CSS Bootstrap -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 </head>
 
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand ms-5" href="#">WEBSITE GALLERY FOTO</a>
@@ -19,10 +21,7 @@
         </div>
     </nav>
 
-    <br>
-    <br>
-    <br>
-    <br>
+    <!-- Form Login -->
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-4">
@@ -44,6 +43,7 @@
                             </div>
                         </form>
                         <hr>
+                        <!-- Link Daftar -->
                         <p>Belum punya akun? <a href="register.php">Daftar Disini!</a></p>
                     </div>
                 </div>
@@ -51,10 +51,12 @@
         </div>
     </div>
 
+    <!-- Footer -->
     <footer class="d-flex justify-content-center border-top mt-3 bg-light fixed-bottom">
         <p>&copy; UKK RPL 2024 | Zackri Kurnia Amri</p>
     </footer>
 
+    <!-- Bootstrap JavaScript -->
     <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
 
 </body>

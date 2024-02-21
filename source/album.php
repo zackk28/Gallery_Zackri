@@ -1,7 +1,11 @@
 <?php
+// Memulai sesi PHP
 session_start();
+// Mengimpor file koneksi.php untuk terhubung ke database
 include '../config/koneksi.php';
+// Memeriksa apakah pengguna telah login atau belum
 if ($_SESSION['status'] !='login') {
+    // Jika belum login, tampilkan pesan peringatan dan arahkan kembali ke halaman login
     echo "<script>
     alert('Anda Belum Login!');
     location.href='../index.php';
@@ -16,9 +20,12 @@ if ($_SESSION['status'] !='login') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery Foto</title>
+    <!-- Mengimpor stylesheet Bootstrap -->
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <!-- Mengimpor font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+    /* CSS Kustom */
     .navbar-nav .nav-link {
         font-size: 1.1rem;
     }
@@ -43,15 +50,20 @@ if ($_SESSION['status'] !='login') {
 </head>
 
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
+            <!-- Navbar Brand -->
             <a class="navbar-brand ms-5" href="#"></a>
+            <!-- Navbar Toggler -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <!-- Navbar Links -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+                    <!-- Link Menu -->
                     <li class="nav-item">
                         <a class="nav-link ms-5" href="home.php">Home</a>
                     </li>
@@ -66,6 +78,7 @@ if ($_SESSION['status'] !='login') {
                     </li>
                 </ul>
             </div>
+            <!-- Logout Link -->
             <div class="navbar-nav ml-auto mr-3" action>
                 <a class="nav-link" href="../config/proseslogout.php">
                     <i class="fas fa-sign-out-alt fa-lg me-4"></i>
@@ -74,6 +87,7 @@ if ($_SESSION['status'] !='login') {
         </div>
     </nav>
 
+    <!-- Konten -->
     <br>
     <br>
     <br>
@@ -87,6 +101,7 @@ if ($_SESSION['status'] !='login') {
                         <div class="text-center">
                             <h5 class="mt-5">Data Album</h5>
                         </div>
+                        <!-- Tabel Data Album -->
                         <table class="table table-hover bg-dark ">
                             <br>
                             <br>
@@ -100,25 +115,29 @@ if ($_SESSION['status'] !='login') {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
+                                <?php   
+                                // Mendapatkan ID pengguna dari sesi
                                 $no = 1;
                                 $userid = $_SESSION['UserID'];
+                                // Mengambil data album pengguna dari database
                                 $sql= mysqli_query($koneksi, "SELECT * FROM album WHERE UserID='$userid'");
+                                // Mengulang setiap data album dan menampilkannya dalam tabel
                                 while($data = mysqli_fetch_array($sql)){
                                 ?>
                                 <tr>
                                     <td><?php echo $no++ ?></td>
                                     <td><?php echo $data['NamaAlbum'] ?></td>
+                                    <!-- Menampilkan deskripsi album dengan batasan panjang -->
                                     <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">
                                         <?php echo $data['Deskripsi'] ?></td>
                                     <td><?php echo $data['TanggalDibuat'] ?></td>
                                     <td>
-
+                                        <!-- Tombol Edit Album -->
                                         <button type="button" class="btn btn-dark" data-bs-toggle="modal"
                                             data-bs-target="#edit<?php echo $data['AlbumID'] ?>">
                                             Edit
                                         </button>
-
+                                        <!-- Modal Edit Album -->
                                         <div class="modal fade" id="edit<?php echo $data['AlbumID'] ?>" tabindex="-1"
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -130,6 +149,7 @@ if ($_SESSION['status'] !='login') {
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
+                                                        <!-- Form untuk mengedit album -->
                                                         <form action="../config/prosesalbum.php" method="POST">
                                                             <input type="hidden" name="AlbumID"
                                                                 value="<?php echo $data['AlbumID']?>">
@@ -142,6 +162,7 @@ if ($_SESSION['status'] !='login') {
                                                                 required> <?php echo $data['Deskripsi']; ?></textarea>
                                                     </div>
                                                     <div class="modal-footer">
+                                                        <!-- Tombol untuk mengirim data edit -->
                                                         <button type="submit" name="edit" class="btn btn-dark">Edit
                                                             Data</button>
                                                         </form>
@@ -149,12 +170,12 @@ if ($_SESSION['status'] !='login') {
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <!-- Tombol Hapus Album -->
                                         <button type="button" class="btn btn-dark" data-bs-toggle="modal"
                                             data-bs-target="#hapus<?php echo $data['AlbumID'] ?>">
                                             Hapus
                                         </button>
-
+                                        <!-- Modal Hapus Album -->
                                         <div class="modal fade" id="hapus<?php echo $data['AlbumID'] ?>" tabindex="-1"
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -166,6 +187,7 @@ if ($_SESSION['status'] !='login') {
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
+                                                        <!-- Form untuk menghapus album -->
                                                         <form action="../config/prosesalbum.php" method="POST">
                                                             <input type="hidden" name="AlbumID"
                                                                 value="<?php echo $data['AlbumID']?>">
@@ -173,6 +195,7 @@ if ($_SESSION['status'] !='login') {
                                                                 <?php echo $data['NamaAlbum'] ?> </strong>
                                                     </div>
                                                     <div class="modal-footer">
+                                                        <!-- Tombol untuk mengirim data hapus -->
                                                         <button type="submit" name="hapus" class="btn btn-dark">Hapus
                                                             Data</button>
                                                         </form>
@@ -180,8 +203,6 @@ if ($_SESSION['status'] !='login') {
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </td>
                                 </tr>
                                 <?php } ?>
@@ -193,12 +214,15 @@ if ($_SESSION['status'] !='login') {
         </div>
     </div>
 
+    <!-- Tombol Tambah Data -->
     <a href="tambahalbum.php" class="btn btn-dark btn-corner">Tambah Data</a>
 
+    <!-- Footer -->
     <footer class="d-flex justify-content-center border-top mt-3 bg-light fixed-bottom">
         <p>&copy; UKK RPL 2024 | Zackri Kurnia Amri</p>
     </footer>
 
+    <!-- Script Bootstrap -->
     <script type="text/javascript" src="../assets/js/bootstrap.min.js"></script>
 </body>
 
