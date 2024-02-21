@@ -68,7 +68,7 @@ if ($_SESSION['status'] != 'login') {
             $album = mysqli_query($koneksi, "SELECT * FROM album WHERE UserID='$userid'");
             while ($row = mysqli_fetch_array($album)) { ?>
             <div class="col-md-3">
-                <a href="home.php?AlbumID=<?php echo $row['AlbumID'] ?>" class="btn btn-outline-dark mb-3">
+                <a href="saya.php?AlbumID=<?php echo $row['AlbumID'] ?>" class="btn btn-outline-dark mb-3">
                     <?php echo $row['NamaAlbum'] ?>
                 </a>
             </div>
@@ -77,14 +77,18 @@ if ($_SESSION['status'] != 'login') {
 
         <div class="row">
             <?php
-            if (isset($_GET['AlbumID'])) {
-                $albumid = $_GET['AlbumID'];
-                $query = mysqli_query($koneksi, "SELECT * FROM foto WHERE UserID='$userid' AND AlbumID='$albumid'");
-            } else {
-                $query = mysqli_query($koneksi, "SELECT * FROM foto WHERE UserID='$userid'");
-            }
+    // Jika AlbumID diset, ambil foto berdasarkan AlbumID
+    if (isset($_GET['AlbumID'])) {
+        $albumid = $_GET['AlbumID'];
+        $query = mysqli_query($koneksi, "SELECT * FROM foto WHERE UserID='$userid' AND AlbumID='$albumid'");
+    } else {
+        // Jika tidak diset, ambil semua foto dari user
+        $query = mysqli_query($koneksi, "SELECT * FROM foto WHERE UserID='$userid'");
+    }
 
-            while ($data = mysqli_fetch_array($query)) { ?>
+    // Loop melalui hasil query
+    while ($data = mysqli_fetch_array($query)) {
+    ?>
             <div class="col-md-3 mt-3">
                 <div class="card">
                     <img style="height: 13rem; object-fit: contain;"
@@ -92,29 +96,30 @@ if ($_SESSION['status'] != 'login') {
                         title="<?php echo $data['JudulFoto'] ?>">
                     <div class="card-footer text-right">
                         <?php
-                            $fotoid = $data['FotoID'];
-                            $ceksuka = mysqli_query($koneksi, "SELECT * FROM likefoto WHERE FotoID='$fotoid' AND UserID='$userid'");
-                            if (mysqli_num_rows($ceksuka) == 1) { ?>
-                        <a href="../config/proseslikesaya.php?FotoID=<?php echo $data['FotoID']?>" type="submit"
+                    $fotoid = $data['FotoID'];
+                    $ceksuka = mysqli_query($koneksi, "SELECT * FROM likefoto WHERE FotoID='$fotoid' AND UserID='$userid'");
+                    if (mysqli_num_rows($ceksuka) == 1) { ?>
+                        <a href="../config/proses_like_copy.php?FotoID=<?php echo $data['FotoID'] ?>" type="submit"
                             name="batalsuka"><i class="fa-solid fa-thumbs-up" style="color: #000000;"></i></a>
                         <?php } else { ?>
-                        <a href="../config/proseslikesaya.php?FotoID=<?php echo $data['FotoID']?>" type="submit"
+                        <a href="../config/proses_like_copy.php?FotoID=<?php echo $data['FotoID'] ?>" type="submit"
                             name="suka"><i class="fa-regular fa-thumbs-up" style="color: #000000;"></i></a>
                         <?php }
-                            $like = mysqli_query($koneksi, "SELECT * FROM likefoto WHERE FotoID='$fotoid'");
-                            echo mysqli_num_rows($like). ' Suka';
-                            ?>
-                        <a href="detail.php?FotoID=<?php echo $data['FotoID']; ?>">
-                            <i class="fa-regular fa-message fa-flip-horizontal" style="color: #000000;">
-                            </i>
-                        </a>
-                        <?php $komen = mysqli_query($koneksi, "SELECT * FROM komentarfoto WHERE FotoID='$fotoid'");
-                            echo mysqli_num_rows($komen). ' Komentar'; ?>
+                    $like = mysqli_query($koneksi, "SELECT * FROM likefoto WHERE FotoID='$fotoid'");
+                    echo mysqli_num_rows($like) . ' Suka';
+                    ?>
+                        <a href="detail.php?FotoID=<?php echo $data['FotoID']; ?>"><i
+                                class="fa-regular fa-message fa-flip-horizontal" style="color: #000000;"></i></a>
+                        <?php
+                    $komen = mysqli_query($koneksi, "SELECT * FROM komentarfoto WHERE FotoID='$fotoid'");
+                    echo mysqli_num_rows($komen) . ' Komentar';
+                    ?>
                     </div>
                 </div>
             </div>
             <?php } ?>
         </div>
+
     </div>
 
     <footer class="d-flex justify-content-center border-top mt-3 bg-light fixed-bottom">

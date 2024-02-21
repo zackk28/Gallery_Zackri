@@ -109,7 +109,8 @@ if ($_SESSION['status'] !='login') {
                                 <tr>
                                     <td><?php echo $no++ ?></td>
                                     <td><?php echo $data['NamaAlbum'] ?></td>
-                                    <td><?php echo $data['Deskripsi'] ?></td>
+                                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">
+                                        <?php echo $data['Deskripsi'] ?></td>
                                     <td><?php echo $data['TanggalDibuat'] ?></td>
                                     <td>
 
