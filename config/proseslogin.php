@@ -18,7 +18,7 @@ if ($cek > 0 ) {
     
     echo "<script>
     alert('Login Berhasil');
-    location.href='../source/index.php';
+    location.href='../source/home.php';
     </script>";
 }else{
     echo "<script>
