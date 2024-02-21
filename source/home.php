@@ -25,6 +25,11 @@ if ($_SESSION['status'] != 'login') {
     .navbar-nav .nav-link {
         font-size: 1.1rem;
     }
+
+    .custom-container {
+        width: 100%;
+        max-width: 2500px;
+    }
     </style>
 </head>
 
@@ -62,27 +67,51 @@ if ($_SESSION['status'] != 'login') {
 
     <div class="container">
         <div class="row">
+            <?php
+        $query = mysqli_query($koneksi, "SELECT foto.*, user.NamaLengkap, album.NamaAlbum FROM foto JOIN user ON foto.UserID = user.UserID JOIN album ON foto.AlbumID = album.AlbumID");
+        while ($data = mysqli_fetch_array($query)) {
+            ?>
             <div class="col-md-3 mt-5">
                 <div class="card mb-2">
                     <div class="card-body">
                         <div class="row">
-                            <img style="height: 13rem; object-fit: contain; object-position: center;"
-                                src="../assets/img/" class="card-img-top">
-                            <div class="card-footer text-right">
-                                <a href="" type="submit" name="batalsuka"><i class="fa-regular fa-thumbs-up"
-                                        style="color: #000000;"></i></a> 40 Suka
-                                <a href="">
-                                    <i class="fa-regular fa-message fa-flip-horizontal" style="color: #000000;">
-                                    </i>
-                                </a> 50 Komentar
+                            <div class="col-6">
+                                <p>@<?php echo $data['NamaLengkap']; ?></p>
+                            </div>
+                            <div class="col-6 text-right">
+                                <p>Album : <?php echo $data['NamaAlbum']; ?></p>
                             </div>
                         </div>
                     </div>
+                    <img style="height: 13rem; object-fit: contain; object-position: center;"
+                        src="../assets/img/<?php echo $data['LokasiFile'] ?>" class="card-img-top"
+                        title="<?php echo $data['JudulFoto'] ?>">
+                    <div class="card-footer text-right">
+                        <?php
+            $fotoid = $data['FotoID'];
+            $ceksuka = mysqli_query($koneksi, "SELECT * FROM likefoto WHERE FotoID='$fotoid' AND UserID='$userid'");
+            if (mysqli_num_rows($ceksuka) == 1) { ?>
+                        <a href="../config/proseslikehome.php?FotoID=<?php echo $data['FotoID']?>" type="submit"
+                            name="batalsuka"><i class="fa-solid fa-thumbs-up" style="color: #000000;"></i></a>
+                        <?php } else { ?>
+                        <a href="../config/proseslikehome.php?FotoID=<?php echo $data['FotoID']?>" type="submit"
+                            name="suka"><i class="fa-regular fa-thumbs-up" style="color: #000000;"></i></a>
+                        <?php }
+            $like = mysqli_query($koneksi, "SELECT * FROM likefoto WHERE FotoID='$fotoid'");
+            echo mysqli_num_rows($like). ' Suka';
+            ?>
+                        <a href="detail.php?FotoID=<?php echo $data['FotoID']; ?>">
+                            <i class="fa-regular fa-message fa-flip-horizontal" style="color: #000000;">
+                            </i>
+                        </a>
+                        <?php $komen = mysqli_query($koneksi, "SELECT * FROM komentarfoto WHERE FotoID='$fotoid'");
+            echo mysqli_num_rows($komen). ' Komentar'; ?>
+                    </div>
                 </div>
-
             </div>
+
+            <?php } ?>
         </div>
-    </div>
     </div>
 
     <footer class="d-flex justify-content-center border-top mt-3 bg-light fixed-bottom">
